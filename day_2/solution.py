@@ -18,14 +18,40 @@ def calculate_value(line, red_max, green_max, blue_max):
         return True
     return False
 
-def part_one(filename):
+def calculate_game_value(game_line):
+    blues, reds, greens = [], [], []
+    colors = game_line.split(': ')[1]
+    draws = colors.split('; ')
+    
+    for draw in draws:
+        color_list = draw.split(', ')
+        for item in color_list:
+            number, color = item.split(' ')
+            if color == 'blue':
+                blues.append(int(number))
+            elif color == 'red':
+                reds.append(int(number))
+            elif color == 'green':
+                greens.append(int(number))
+    
+    return max(reds) * max(greens) * max(blues)
+
+def main(filename):
     with open(filename, "r") as file:
         puzzle_input = file.read().strip().split('\n')
+
     red_max = 12
     green_max = 13
     blue_max = 14
-    value = sum(idx + 1 for idx, line in enumerate(puzzle_input) if calculate_value(line, red_max, green_max, blue_max))
-    return value
 
-result = part_one("in.txt")
-print("Sum of IDs of possible games:", result)
+    # Part One
+    value = sum(idx + 1 for idx, line in enumerate(puzzle_input) if calculate_value(line, red_max, green_max, blue_max))
+    print("Sum of IDs of possible games (Part One):", value)
+
+    # Part Two
+    game_values = [calculate_game_value(line) for line in puzzle_input]
+    total_value = sum(game_values)
+    print("Sum of game values (Part Two):", total_value)
+
+if __name__ == "__main__":
+    main("in.txt")
